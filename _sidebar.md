@@ -6,6 +6,8 @@
   * [泛型](learn_ts/泛型)
 
 * **Vue3**
+  * [基本使用](learn_vue3/guid.md)
+
 * **Vite**
 * **Vue3+ts**
 
