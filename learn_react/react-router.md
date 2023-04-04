@@ -29,22 +29,18 @@ export default function App() {
         <li>
           <Link to="/about">About</Link>
         </li>
-
         <li>
           <Link to="/xxxx">NotFound</Link>
         </li>
       </ul>
       <hr />
-
       <Switch>
         <Route exact path="/">
           <Home />
         </Route>
-
         <Route path="/about">
           <About />
         </Route>
-
         <Route path="*">
           <NoFound />
         </Route>
@@ -73,7 +69,6 @@ export default function App() {
     <BrowserRouter>
       <div>
         <h2>Accounts</h2>
-
         <ul>
           <li>
             <Link to="/netflix">Netflix</Link>
@@ -88,7 +83,6 @@ export default function App() {
             <Link to="/modus-create">Modus Create</Link>
           </li>
         </ul>
-
         <Switch>
           <Route path="/:id" children={<Child />} />
         </Switch>
