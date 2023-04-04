@@ -16,3 +16,5 @@
 
 * **react**
   * [基本语法](learn_react/基本语法)
+  * [redux](learn_react/redux)
+  * [路由](learn_react/react-router)
