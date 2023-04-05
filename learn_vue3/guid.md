@@ -1,5 +1,6 @@
-# Vue3部分
-*   定义全局属性 app.config.globalProperties（这是对 Vue 2 中 `Vue.prototype` 使用方式的一种替代，此写法在 Vue 3 已经不存在了）使用方法如下：
+# Vue3
+
+* 定义全局属性 app.config.globalProperties（这是对 Vue 2 中 `Vue.prototype` 使用方式的一种替代，此写法在 Vue 3 已经不存在了）使用方法如下：
 
 ```javascript
 // 注入一个全局可用的 $translate() 方法
@@ -23,9 +24,9 @@ proxy.$translate('哈哈')
 <template>{{$translate('哈哈')}}</template>
 ```
 
-*   ref() (接受一个内部值，这个值可以是基本数据类型也可以是一个复杂数据类型，返回一个响应式的、可更改的 refImpl 对象)
+* ref() (接受一个内部值，这个值可以是基本数据类型也可以是一个复杂数据类型，返回一个响应式的、可更改的 refImpl 对象)
 
-    reactive() (接受一个值(只能是对象或者是数据)返回一个对象的响应式代理)的使用如下：
+  reactive() (接受一个值(只能是对象或者是数据)返回一个对象的响应式代理)的使用如下：
 
 ```javascript
 // ref的使用
@@ -67,16 +68,16 @@ let {username,password} = state
 let {username,password} = toRefs(state)
 ```
 
-**// 注意：在模板中使用是不用带.value  原因 ref 在模板中使用的时候会自动解包(详情见文档)**
+>注意：在模板中使用是不用带.value  原因 ref 在模板中使用的时候会自动解包(详情见文档)
 
-*   组件Props的声明和使用
+* 组件Props的声明和使用
 
 ```javascript
 // 不需要手动导入 defineProps
 const props = defineProps({
 	propsName:{
-       type:String,
-       default:'测试'
+      type:String,
+      default:'测试'
     }
 })
 
@@ -84,7 +85,7 @@ const props = defineProps({
 console.log(props.propsName)
 ```
 
-*   ref 属性的使用
+* ref 属性的使用
 
 ```javascript
 // ref 它允许我们在一个特定的 DOM 元素或子组件实例被挂载后，获得对它的直接引用
@@ -109,9 +110,9 @@ const p = ref()
 
 ```
 
-**注意:如果通过ref来获取某个组件中的属性个方法 该组件必须通过 defineExpose() 来导出 详情可见文档 <https://cn.vuejs.org/api/sfc-script-setup.html#defineexpose>**
+>注意:如果通过ref来获取某个组件中的属性个方法 该组件必须通过 defineExpose() 来导出 详情可见文档 <https://cn.vuejs.org/api/sfc-script-setup.html#defineexpose>
 
-*   watch的使用
+* watch的使用
 
 ```javascript
 import {watch} from 'vue'
@@ -122,11 +123,9 @@ watch([xxx,yyy],()=>{})
 watch(()=>xxx.sss,()=>{})
 ```
 
-**注意：监测复杂类型或者是数组时 vue内部会隐式地创建一个深层侦听器，但是一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调此时应该为其添加deep\:true参数 具体见文档 <https://cn.vuejs.org/guide/essentials/watchers.html#deep-watchers>**
+>注意：监测复杂类型或者是数组时 vue内部会隐式地创建一个深层侦听器，但是一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调此时应该为其添加deep\:true参数 具体见文档 <https://cn.vuejs.org/guide/essentials/watchers.html#deep-watchers>
 
-&#x20;**更多参数和用法请见文档  <https://cn.vuejs.org/api/reactivity-core.html#watch>**
-
-*   自定义事件
+* 自定义事件
 
 ```javascript
 // 定义事件
@@ -137,13 +136,13 @@ emit('change')
 // 传参
 const emit = defineEmits({
   change(xxx){
-	return true
+	  return true
   }
 })
 emit('change',xxx)
 ```
 
-*   组件懒加载
+* 组件懒加载
 
 ```javascript
 import {defineAsyncComponent} from 'vue'
