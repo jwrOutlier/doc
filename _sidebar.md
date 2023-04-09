@@ -10,8 +10,8 @@
 * **Vue3**
   * [基本使用](learn_vue3/guid.md)
 
-* **Vite**
-* **Vue3+ts**
+<!-- * **Vite**
+* **Vue3+ts** -->
 
 <!-- * **golang**
   * [基本语法](learn_go/基本语法) -->
