@@ -38,3 +38,84 @@
             window.URL.revokeObjectURL(herf)
         }
     ```
+
+2. 大屏缩放组件
+```vue
+<template>
+  <div class="ScreenAdapter" :style="style">
+    <slot />
+  </div>
+</template>
+<script>
+export default {
+  name: 'ScreenAdapter',
+  props: {
+    width: {
+      type: Number,
+      default: 1920 // 设计稿的大小  记住不能动态的改变这个的大小
+    },
+    height: {
+      type: Number,
+      default: 937 // 设计稿的大小 记住不能动态的改变这个的大小
+    }
+  },
+  data () {
+    return {
+      style: {
+        width: this.width + 'px',
+        height: this.height + 'px',
+        transform: 'scale(1) translate(-50%, -50%)'
+      }
+    }
+  },
+  mounted () {
+    this.setScale()
+    window.onresize = this.Debounce(this.setScale, 400)
+  },
+  methods: {
+    Debounce: (fn, t) => {
+      const delay = t || 500
+      let timer
+      return function () {
+        const args = arguments
+        if (timer) {
+          clearTimeout(timer)
+        }
+        const context = this
+        timer = setTimeout(() => {
+          timer = null
+          fn.apply(context, args)
+        }, delay)
+      }
+    },
+    // 获取放大缩小比例
+    getScale () {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const w = width / this.width
+      const h = height / this.height
+      return w < h ? w : h
+      // return w
+    },
+    // 设置比例
+    setScale () {
+      this.style.transform = 'scale(' + this.getScale() + ') translate(-50%, -50%)'
+    }
+  },
+  destroyed () {
+    window.onresize = null
+  }
+}
+</script>
+<style lang="scss" scoped>
+.ScreenAdapter {
+    transform-origin: 0 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transition: 0.3s;
+    padding: 20px;
+    box-sizing: border-box;
+}
+</style>
+```
