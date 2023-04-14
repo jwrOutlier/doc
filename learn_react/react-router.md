@@ -367,3 +367,89 @@ function ShowInfo() {
 > state传参时有一个问题：当页面刷新时 state 会丢失数据，解决方法：可以存储在本地
 
 * 路由配置
+
+```js
+import { Link, Switch, Route } from 'react-router-dom';
+
+const routes = [
+  {
+    path: '/sandwiches',
+    component: Sandwiches,
+  },
+  {
+    path: '/tacos',
+    component: Tacos,
+    children: [
+      {
+        path: '/tacos/bus',
+        component: Bus,
+      },
+      {
+        path: '/tacos/cart',
+        component: Cart,
+      },
+    ],
+  },
+];
+
+export default function App() {
+  return (
+    <div>
+      <ul>
+        <li>
+          <Link to="/tacos">Tacos</Link>
+        </li>
+        <li>
+          <Link to="/sandwiches">Sandwiches</Link>
+        </li>
+      </ul>
+
+      <Switch>
+        {routes.map((route, idx) => (<RouteView key={idx} {...route}></RouteView>))}
+      </Switch>
+    </div>
+  );
+}
+
+function RouteView({path,children}) {
+  return (
+    <Route
+      path={path}
+      render={props => (<route.component {...props} routes={children} />)}>
+    </Route>
+  );
+}
+
+function Tacos({ routes }) {
+  return (
+    <div>
+      <h2>Tacos</h2>
+      <ul>
+        <li>
+          <Link to="/tacos/bus">Bus</Link>
+        </li>
+        <li>
+          <Link to="/tacos/cart">Cart</Link>
+        </li>
+      </ul>
+
+      <Switch>
+        {routes.map((route, i) => (<RouteView key={i} {...route} />))}
+      </Switch>
+    </div>
+  );
+}
+
+function Sandwiches() {
+  return <h2>Sandwiches</h2>;
+}
+
+function Bus() {
+  return <h3>Bus</h3>;
+}
+
+function Cart() {
+  return <h3>Cart</h3>;
+}
+
+```
