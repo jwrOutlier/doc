@@ -340,5 +340,23 @@ export default connect(mapStateToProps, mapDispatchProps)(About)
 
 >注意dispatch只能派发一个对象，如果想要派发一个函数，只能利用react-thunk中间件来实现
 
+* **集成redux devTool**
 
+```js
+import { createStore,applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import reducer from './reducer'
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__||compose  // 集成redux-devtool
+const store = createStore(reducer,composeEnhancers(applyMiddleware(thunk)))
+
+export default store
+```
+
+* **Reducers 拆分**
+
+![reducers拆分](../_media/reducers拆分.png)
+![combineReduces函数](../_media/combineReduces函数.png)
+
+> combineReduces将两个reducers返回的对象合并成一个对象使用mapStateToProps  拿状态值的时候要xxx.counterInfo.xxx
 
