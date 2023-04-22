@@ -119,3 +119,104 @@ export default {
 }
 </style>
 ```
+
+3.vw和vh响应式方案
+
+* sass 方案
+
+```scss
+@use "sass:math";
+
+// 默认设计稿的宽度
+$designWidth: 1920;
+// 默认设计稿的高度
+$designHeight: 1080;
+
+// px 转为 vw 的函数  可以设置宽和字体大小
+@function vw($px) {
+    @return math.div($px, $designWidth) * 100vw;
+}
+
+// px 转为 vh 的函数
+@function vh($px) {
+    @return math.div($px, $designHeight) * 100vh;
+}
+
+
+.App {
+    width: vw(400);
+    height: vh(300);
+    background-color: aqua;
+    font-size: vw(16);
+}
+```
+
+* less 方案
+
+```less
+@charset "utf-8";
+
+// 默认设计稿的宽度
+@designWidth: 1920;
+
+// 默认设计稿的高度
+@designHeight: 1080;
+
+.px2vw(@name, @px) {
+  @{name}: (@px / @designWidth) * 100vw;
+}
+
+.px2vh(@name, @px) {
+  @{name}: (@px / @designHeight) * 100vh;
+}
+
+.px2font(@px) {
+  font-size: (@px / @designWidth) * 100vw;
+}
+
+```
+
+4. 轮播swiper的用法
+
+> swiper版本`^9.1.0`  注意：每个版本可能不同
+
+用法：
+```html
+<div class="swiper-container swiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="inner-item"></div>
+        </div>
+    </div>
+</div>
+```
+> 注意：swiper-container  要设置固定高度
+
+```js
+import Swiper,{ Autoplay } from 'swiper';
+import 'swiper/swiper-bundle.css';
+Swiper.use([Autoplay])
+
+new Swiper('.swiper-container', {
+    direction: 'vertical',  // 方向
+    spaceBetween: 26,
+     // 改变swiper样式时，自动初始化swiper
+    observer: true,
+    // 监测swiper父元素，如果有变化则初始化swiper
+    observeParents: true,
+    loop: true, // 是否循环滑动
+    slidesPerView: 5, // 每次滑动显示几个Slide
+    autoplay: {
+      delay: 2000, // 自动切换的时间间隔
+      disableOnInteraction: false, // 用户操作后是否停止自动切换
+    },
+})
+```
+
+5. 打印页面
+
+设置打印页面的样式
+```css
+    @media print {
+    }
+```
