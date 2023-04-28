@@ -176,7 +176,41 @@ $designHeight: 1080;
 
 ```
 
-4. 轮播swiper的用法
+4. 大屏适配方案scale 解决留白问题
+
+```js
+const autofit = {
+  init(options) {
+    let designWidth = options?.designWidth || 1920;
+    let designHeight = options?.designHeight || 929;
+    let renderDom = options?.renderDom || "#app";
+    let resize = options?.resize || true;
+    document.querySelector(renderDom).style.height = `${designHeight}px`;
+    document.querySelector(renderDom).style.width = `${designWidth}px`;
+    document.querySelector(renderDom).style.transformOrigin = `0 0`;
+    keepFit(designWidth, designHeight, renderDom);
+    resize && (window.onresize = () => {
+      keepFit(designWidth, designHeight, renderDom);
+    })
+  }
+}
+
+function keepFit(designWidth, designHeight, renderDom) {
+  let clientHeight = document.documentElement.clientHeight;
+  let clientWidth = document.documentElement.clientWidth;
+  let scale = 1;
+  if (clientWidth / clientHeight < designWidth / designHeight) {
+    scale = (clientWidth / designWidth)
+    document.querySelector(renderDom).style.height = `${clientHeight / scale}px`;
+  } else {
+    scale = (clientHeight / designHeight)
+    document.querySelector(renderDom).style.width = `${clientWidth / scale}px`;
+  }
+  document.querySelector(renderDom).style.transform = `scale(${scale})`;
+}
+```
+
+5. 轮播swiper的用法
 
 > swiper版本`^9.1.0`  注意：每个版本可能不同
 
@@ -219,4 +253,11 @@ new Swiper('.swiper-container', {
 ```css
     @media print {
     }
+```
+
+6. git 常用命令
+
+```
+// 合并分支上某一个提交
+git cherry-pick 430b5faa84a813eb06e770925b09c82553b2e10
 ```

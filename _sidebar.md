@@ -22,5 +22,8 @@
   * [路由](learn_react/react-router)
   * [react中样式方案](learn_react/react中样式方案)
 
+* **svelet**
+  * [基本语法](learn_svelet/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95.md)
+
 * [**实用工具**](work_note/tool)
 * [**源码解读**](learn_vue3/源码解读.md)
