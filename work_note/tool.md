@@ -261,3 +261,80 @@ new Swiper('.swiper-container', {
 // 合并分支上某一个提交
 git cherry-pick 430b5faa84a813eb06e770925b09c82553b2e10
 ```
+
+7. 打字特效
+
+```js
+const printText = (dom: HTMLElement, content: string, speed = 50) => {
+  let index = 0
+  setCursorStatus(dom, 'typing')
+  let printInterval = setInterval(() => {
+    dom.innerHTML += content[index]
+    index++
+    if (index >= content.length) {
+      setCursorStatus(dom, 'end')
+      currentStatus.value = 'end'
+      clearInterval(printInterval)
+    }
+  }, speed)
+}
+
+const setCursorStatus = (dom: HTMLElement,status: 'loading' | 'typing' | 'end')=>{
+  const classList = {
+    loading: 'typing blinker',
+    typing: 'typing',
+    end: '',
+  }
+  dom.className = classList[status]
+}
+```
+
+```css
+.typing::after {
+  content: '▌';
+}
+.blinker::after {
+  animation: blinker 1s step-end infinite;
+}
+@keyframes blinker {
+  0% {
+    visibility: visible;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+```
+
+8. 加载动画
+
+```html
+<div>
+  加载中，请稍后<span class="dot"></span>
+</div>
+```
+
+```css
+.dot {
+    display: inline-block;
+    height: 12px;
+    line-height: 12px;
+    overflow: hidden;
+    &::after{
+      display: inline-table;
+      white-space: pre;
+      content: "\A.\A..\A...";
+      animation: dot 2s steps(4) infinite;
+    }
+}
+
+@keyframes dot {
+  to{
+    -webkit-transform:translateY(-48px);
+    transform:translateY(-48px)
+  }
+}
+```
