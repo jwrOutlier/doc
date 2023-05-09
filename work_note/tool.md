@@ -251,8 +251,8 @@ new Swiper('.swiper-container', {
 
 设置打印页面的样式
 ```css
-    @media print {
-    }
+  @media print {
+  }
 ```
 
 6. git 常用命令
@@ -434,3 +434,13 @@ console.log('Server listening on port 3000');
 >3. EventSource不需要客户端指定数据传输的格式，它支持多种数据类型包括JSON，XML和纯文本，而WebSocket需要明确指定数据格式
 >
 >总体来说，如果您只需要从服务器获得实时数据，并且不需要与服务器进行交互，则使用EventSource是很方便的。如果需要服务器和客户端同时发送数据，则应该使用WebSocket。
+
+
+10. 无缝滚动插件(https://chenxuan0000.github.io/vue-seamless-scroll/guide/)
+
+```
+npm i vue3-seamless-scroll  (v3)
+npm i vue-seamless-scroll (v2)
+```
+
+
