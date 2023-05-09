@@ -338,3 +338,99 @@ const setCursorStatus = (dom: HTMLElement,status: 'loading' | 'typing' | 'end')=
   }
 }
 ```
+
+9. SSE 连接
+
+EventSource是一个在浏览器中使用的API，用于从服务器获取实时数据。它使用HTTP协议来建立连接并保持服务器和客户端之间的长连接，从而以一种异步无阻塞的方式传输数据。
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <button onclick="connectSSE()">建立 SSE 连接</button>
+    <button onclick="closeSSE()">断开 SSE 连接</button> <br /> <br />
+    <div id="message"></div>
+  </div>
+  <script>
+    const message = document.querySelector('#message')
+    let eventSource
+
+    // 连接sse 连接
+    const connectSSE = () => {
+        eventSource = new EventSource('/events')
+        eventSource.addEventListener('customEvent', (event) => {
+            const data = JSON.parse(event.data)
+            message.innerHTML += `${data.id} --- ${data.time}` + '<br />'
+        })
+
+        eventSource.onopen = () => {
+            message.innerHTML += `SSE 连接成功，状态${eventSource.readyState}<br />`
+        }
+        eventSource.onerror = () => {
+            message.innerHTML += `SSE 连接错误，状态${eventSource.readyState}<br />`
+        }
+    }
+
+    // 断开 SSE 连接
+    const closeSSE = () => {
+      eventSource.close()
+      message.innerHTML += `SSE 连接关闭，状态${eventSource.readyState}<br />`
+    }
+  </script>
+</body>
+
+</html>
+```
+
+```js
+// 服务端代码
+const http = require('http')
+const fs = require('fs')
+
+http.createServer((req, res) => {
+  if (req.url === '/') {
+    // 如果请求根路径，返回 index.html 文件
+    fs.readFile('index.html', (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        res.end('Error loading index.html');
+      } else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(data);
+      }
+    });
+  } else if (req.url === '/events') {
+    res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
+
+    let id = 0
+    const intervalID = setInterval(() => {
+      res.write(`event: customEvent\n`)
+      const data = { id, time: new Date().toISOString()}
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+      id++
+    }, 1000)
+
+    req.on('close', () => {
+      clearInterval(intervalID)
+      id = 0
+      res.end()
+    })
+  }
+}).listen(3000)
+
+console.log('Server listening on port 3000');
+```
+>与WebSocket相比，EventSource有以下一些区别：
+>1. EventSource只能从服务器向客户端发送数据，不能反向发送数据，而WebSocket支持双向通信
+>2. EventSource使用HTTP协议而不是WebSocket的自定义协议
+>3. EventSource不需要客户端指定数据传输的格式，它支持多种数据类型包括JSON，XML和纯文本，而WebSocket需要明确指定数据格式
+>
+>总体来说，如果您只需要从服务器获得实时数据，并且不需要与服务器进行交互，则使用EventSource是很方便的。如果需要服务器和客户端同时发送数据，则应该使用WebSocket。
