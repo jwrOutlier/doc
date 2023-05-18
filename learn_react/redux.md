@@ -360,3 +360,56 @@ export default store
 
 > combineReduces将两个reducers返回的对象合并成一个对象使用mapStateToProps  拿状态值的时候要xxx.counterInfo.xxx
 
+* **Redux Toolkit和Redux-Redux结合使用**
+
+```js
+    // 第一步 创建store
+    import { configureStore } from '@reduxjs/toolkit';
+    import counterReducer from './counterSlice';
+
+    export default configureStore({
+        reducer: {
+            count: counterReducer,
+        },
+    });
+
+    // 第二步 创建切片
+    import { createSlice } from '@reduxjs/toolkit';
+    export const counterSlice = createSlice({
+        name: 'counter',
+        initialState: {
+            value: 0,
+        },
+        reducers: {
+            increment: state => {
+                state.value++
+            },
+        },
+    });
+
+    // 每个reducers  都将会生成一个Action creators
+    export const { increment } = counterSlice.actions;
+    export default counterSlice.reducer;
+
+    // 第三步 为全局注入store
+    import store from './redux/store';
+    import { Provider} from 'react-redux'
+
+    <Provider store={store}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </Provider>
+
+    // 第四步 在组件中使用  获取state和派发事件
+    import { useSelector, useDispatch } from 'react-redux';
+    import { increment } from '../redux/counterSlice';
+    const value = useSelector(state=>state.count.value)
+    const dispatch = useDispatch()
+
+    const handleClick = ()=>{
+        dispatch(increment())
+    }
+
+```
+

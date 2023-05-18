@@ -443,4 +443,10 @@ npm i vue3-seamless-scroll  (v3)
 npm i vue-seamless-scroll (v2)
 ```
 
+11. 代码编辑插件(https://renncheung.github.io/codemirror-editor-vue3/zh-CN/guide/getting-started)  配合codemirror5
+
+```
+npm i codemirror-editor-vue3
+```
+
 
