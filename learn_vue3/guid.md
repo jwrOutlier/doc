@@ -116,11 +116,17 @@ const p = ref()
 
 ```javascript
 import {watch} from 'vue'
+
 watch(()=>xxx,()=>{})
+
 watch(xxx,()=>{})  // xxx 必须是ref对象或者是响应式对象
-watch([xxx,yyy],()=>{})
-// 注意，你不能直接侦听响应式对象的属性值  你应该这个样写
+
+watch([xxx,yyy],()=>{})  // 监测多个属性
+
+// 注意，当监听reactive 所定义的某一个属性时 使用getter 函数
 watch(()=>xxx.sss,()=>{})
+
+// 当监听reactive所定义的对象时，不需要手动指定deep:true   内部自动的添加deep:true
 ```
 
 >注意：监测复杂类型或者是数组时 vue内部会隐式地创建一个深层侦听器，但是一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调此时应该为其添加deep\:true参数 具体见文档 <https://cn.vuejs.org/guide/essentials/watchers.html#deep-watchers>
