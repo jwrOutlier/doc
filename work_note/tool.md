@@ -449,4 +449,126 @@ npm i vue-seamless-scroll (v2)
 npm i codemirror-editor-vue3
 ```
 
+12.  大屏放缩插件autofit.js (https://www.npmjs.com/package/autofit.js)
+
+```
+  npm i autofit.js
+```
+
+13. 切片上传
+
+文件切割
+```js
+  const size = 1024 * 1024 * 5 // 5MB 切片大小
+  const fileChunks = []
+  let index = 0 // 切片序号 初始位置
+
+  // 根据文件内容生成 hash值  做成异步的不然会阻塞
+  this.computeFileMD5(file).then(md5 => {
+    this.md5 = md5
+  })
+
+  // 生成切片
+  for (let cur = 0; cur < file.size; cur += size) {
+    fileChunks.push({
+      index: index++,
+      chunk: file.slice(cur, cur + size)
+    })
+  }
+
+  // 控制并发
+  const pool = []// 并发池
+  const max = 4 // 最大并发量
+
+  for (let i = 0; i < fileChunks.length; i++) {
+    const item = fileChunks[i]
+    const formData = new FormData()
+    formData.append('file', item.chunk)
+    formData.append('index', item.index)
+    formData.append('file_name', file.name)
+
+    // 上传切片 任务
+    const task = this.$ajax.upload('sample_upload_big_file', formData)
+    task.then(() => {
+      // 每次执行任务的时候计算上传进度
+      this.current++
+      this.progress = Math.ceil((this.current / fileChunks.length) * 100) === 100 ? 99 : Math.ceil((this.current / fileChunks.length) * 100)
+      // 请求结束后将该Promise任务从并发池中移除
+      const index = pool.findIndex(t => t === task)
+      pool.splice(index)
+
+      // 合并切片
+      if (this.current === fileChunks.length) {
+        // 执行合并请求
+      }
+    })
+    pool.push(task)
+
+    if (pool.length === max) {
+      // 每当并发池跑完一个任务，就再塞入一个任务
+      await Promise.race(pool)
+    }
+  }
+```
+
+使用切片计算大文件的md5
+```js
+  import SparkMD5 from 'spark-md5'
+
+  // 计算文件的md5
+  computeFileMD5 (file) {
+    return new Promise((resolve, reject) => {
+      let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice
+      let chunkSize = 20 * 1024 * 1024 // 按照一片 10MB 分片
+      let chunks = Math.ceil(file.size / chunkSize) // 片数
+      let currentChunk = 0
+      let spark = new SparkMD5.ArrayBuffer()
+      let fileReader = new FileReader()
+
+      fileReader.onload = function (e) {
+        // console.log('read chunk nr', currentChunk + 1, 'of', chunks)
+        spark.append(e.target.result)
+        currentChunk++
+
+        if (currentChunk < chunks) {
+          loadNext()
+        } else {
+          console.log('md5 finished loading')
+          let md5 = spark.end() // 最终md5值
+          spark.destroy() // 释放缓存
+          resolve(md5)
+        }
+      }
+
+      fileReader.onerror = function (e) {
+        console.warn('oops, something went wrong.')
+        reject(e)
+      }
+
+      function loadNext () {
+        let start = currentChunk * chunkSize
+        let end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize
+        fileReader.readAsArrayBuffer(blobSlice.call(file, start, end))
+      }
+
+      loadNext()
+    })
+  }
+```
+
+文件读取（大文件会读取失败，读取大文件可以使用切片读取）
+```js
+  fileToBuffer (file) {
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader()
+      fr.readAsArrayBuffer(file)
+      fr.onload = e => {
+        resolve(e.target.result)
+      }
+      fr.onerror = e => {
+        reject(e)
+      }
+    })
+  },
+```
 
